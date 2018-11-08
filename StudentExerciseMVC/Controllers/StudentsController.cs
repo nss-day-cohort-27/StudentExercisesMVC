@@ -8,6 +8,7 @@ using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using StudentExerciseMVC.Models.ViewModels;
 using StudentExercisesAPI.Data;
 
 namespace StudentExerciseMVC.Controllers
@@ -72,13 +73,18 @@ namespace StudentExerciseMVC.Controllers
         // GET: Students/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new StudentCreateViewModel(_config);
+            return View(model);
         }
 
         // POST: Students/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(InstructorCreateViewModel model)
+
+        
+
+        public async Task<ActionResult> Create(StudentCreateViewModel model)
+
         {
             string sql = $@"INSERT INTO Student 
             (FirstName, LastName, SlackHandle, CohortId)

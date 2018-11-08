@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
+using StudentExerciseMVC.Models.ViewModels;
 using StudentExercisesAPI.Data;
 
 namespace StudentExerciseMVC.Controllers
@@ -101,7 +101,7 @@ namespace StudentExerciseMVC.Controllers
                 '{model.instructor.FirstName}'
                 ,'{model.instructor.LastName}'
                 ,'{model.instructor.SlackHandle}'
-                ,{model.instructor.CohortId}
+                ,{model.instructor.Cohort}
             );";
 
         using (IDbConnection conn = Connection)
@@ -133,37 +133,37 @@ namespace StudentExerciseMVC.Controllers
             return View(instructor);
         }
     }
-    //Post:instructor/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(int id, Instructor instructor)
-    {
-        try
+        //Post:instructor/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(int id, Instructor instructor)
         {
-            // TODO: Add update logic here
-            string sql = $@"
+            try
+            {
+                // TODO: Add update logic here
+                string sql = $@"
                     UPDATE INstructor
                     SET FirstName = '{instructor.FirstName}',
                         LastName = '{instructor.LastName}',
                         SlackHandle = '{instructor.SlackHandle}'
                     WHERE Id = {id}";
 
-            using (IDbConnection conn = Connection)
-            {
-                int rowsAffected = await conn.ExecuteAsync(sql);
-                if (rowsAffected > 0)
+                using (IDbConnection conn = Connection)
                 {
-                    return RedirectToAction(nameof(Index));
-                }
-                return BadRequest();
+                    int rowsAffected = await conn.ExecuteAsync(sql);
+                    if (rowsAffected > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    return BadRequest();
 
+                }
+            }
+            catch
+            {
+                return View();
             }
         }
-        catch
-        {
-            return View();
-        }
-    }
 
     //// GET: instructor/Delete/5
     public async Task<ActionResult> DeleteConfirm(int id)
@@ -181,7 +181,7 @@ namespace StudentExerciseMVC.Controllers
 
         using (IDbConnection conn = Connection)
         {
-            Student student = await conn.QueryFirstAsync<Instructor>(sql);
+            Instructor instructor = await conn.QueryFirstAsync<Instructor>(sql);
             return View(instructor);
         }
     }
