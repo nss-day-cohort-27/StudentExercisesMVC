@@ -78,18 +78,24 @@ namespace StudentExerciseMVC.Controllers
         // POST: Students/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(InstructorCreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            string sql = $@"INSERT INTO Student 
+            (FirstName, LastName, SlackHandle, CohortId)
+            VALUES
+            (
+                '{model.student.FirstName}'
+                ,'{model.student.LastName}'
+                ,'{model.student.SlackHandle}'
+                ,{model.student.CohortId}
+            );";
 
+            using (IDbConnection conn = Connection)
+            {
+                var newId = await conn.ExecuteAsync(sql);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
         }
 
         // GET: Students/Edit/5
