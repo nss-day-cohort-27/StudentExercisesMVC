@@ -80,7 +80,10 @@ namespace StudentExerciseMVC.Controllers
         // POST: Students/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> Create(InstructorCreateViewModel model
         public async Task<ActionResult> Create(StudentCreateViewModel model)
+
         {
             string sql = $@"INSERT INTO Student 
             (FirstName, LastName, SlackHandle, CohortId)
